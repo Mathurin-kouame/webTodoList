@@ -1,5 +1,5 @@
 import { InjectRepository } from '@nestjs/typeorm';
-import { User } from 'src/auth/user.entity';
+import { User } from 'src/users/user.entity';
 import { Repository } from 'typeorm';
 import { RegisterDto } from './dto/register.dto';
 import { NotFoundException } from '@nestjs/common';
@@ -21,7 +21,7 @@ export class AuthService {
     const existingEmail = await this.userRepository.findOne({
       where: { email },
     });
-    if (!existingEmail)
+    if (existingEmail)
       throw new NotFoundException({
         error: 'Cet email est déjà utilisé.',
       });
@@ -57,11 +57,11 @@ export class AuthService {
       existingUser.password,
     );
 
-    if (isPasswordValid)
+    if (!isPasswordValid)
       throw new NotFoundException({
         error: "Mot de passe ou le nom de l'utilisateur est incorrect",
       });
-    return this.authentificateUser({ id: existingUser.id });
+    return this.authentificateUser(existingUser.id);
   }
   //fonction pour verifier le mot de passe hash
   private async isPasswordValid(
@@ -71,8 +71,8 @@ export class AuthService {
     return bcrypt.compare(password, hashedPassword);
   }
 
-  private async authentificateUser(id: { id: number }) {
-    const payload = { id };
+  private async authentificateUser(userId: number) {
+    const payload = { sub: userId };
 
     //'singAsync' pour génerer le token
     const token = await this.jwtService.signAsync(payload);
