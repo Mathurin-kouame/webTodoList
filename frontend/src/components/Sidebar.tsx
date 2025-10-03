@@ -1,21 +1,44 @@
+import { useState } from "react";
+import Project from "../pages/Project";
+import Modal from "./Modal";
+import type { Projet } from "../types/type";
+
+
 
 type SidebarProps = {
-  projets: { id: number; titre: string }[];
+  projets: Projet[];
   onSelectProjet: (id: number | null) => void;
+  onAddProjet: (titre: string, description: string) => void;
+  onShowProjets?: () => void;
 };
 
- const  Sidebar = ({ projets, onSelectProjet }: SidebarProps) =>{
+const Sidebar = ({ projets, onSelectProjet, onAddProjet, onShowProjets }: SidebarProps) => {
+  const [open, setOpen] = useState<boolean>(false);
+
   return (
-    <aside className="w-64 bg-gray-200 p-4">
+     <aside className="w-64 bg-gray-200 p-4 flex flex-col">
       <h2 className="text-xl font-bold mb-4">Gestion de Projets</h2>
+
       <button
-        className="w-full mb-2 py-2 px-4 bg-blue-500 text-white rounded hover:bg-blue-600 cursor-pointer"
-        onClick={() => onSelectProjet(null)}
+        className="w-full  py-2 px-4 text-black rounded hover: blue-600 border-0 text-sm"
+        onClick={() => setOpen(true)}
       >
-        Créer un Projet
+        + Nouveau Projet
       </button>
-      <h3 className="font-semibold mt-4 mb-2">Mes Projets</h3>
-      <ul>
+
+       <Modal open={open} onClose={() => setOpen(false)}>
+        <Project onAddProjet={onAddProjet} onClose={() => setOpen(false)} />
+      </Modal>
+
+      <button
+        className="w-full  text-black rounded hover: blue-600 border-0 text-sm"
+        onClick={onShowProjets}
+      >
+        Liste des Projets
+      </button>
+
+      <h3>Accès Rapide</h3>
+      <ul className="space-y-1">
         {projets.map((projet) => (
           <li
             key={projet.id}

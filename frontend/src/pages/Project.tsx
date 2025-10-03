@@ -1,30 +1,58 @@
- const Project = () => {
-    return (
-        <div className="flex items-center justify-center h-screen">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {/* Exemple de projet */}
-                <div className="bg-white shadow w-130 h-100 rounded-xl p-4 transition">
-                    <h2 className="text-xl font-semibold">Nouveau projet</h2>
-                    <form action="">
-                        <label htmlFor="title">
-                            Titre:
-                            <input type="text" className="block w-120 rounded-md  px-3 py-1.5  text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-green-700 sm:text-sm/6 dark:bg-white/5  dark:placeholder:text-gray-500 dark:focus:outline-green-700"
-/>
-                        </label>
-                       <label> <br />
-                            Description:
-                            <textarea name="content"
-                                rows={4}
-                                cols={40}
-                                className="block w-120 rounded-md  px-3 py-1.5  text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-green-700 sm:text-sm/6 dark:bg-white/5  dark:placeholder:text-gray-500 dark:focus:outline-green-700"
-                            />
-                      </label>
-                        <button className="bg-teal-700 p-2 mt-5 hover:bg-teal-600 rounded-sm text-amber-50">Créer</button>
-                    </form>
-                </div>
-                {/* Ajouter d'autres projets ici */}
-            </div>
-        </div>
-    );
- }
-export default Project;
+import { useState } from "react";
+
+type ProjectProps = {
+  onAddProjet: (titre: string, description: string) => void;
+  onClose: () => void;
+}
+
+const Project: React.FC<ProjectProps> = ({ onAddProjet, onClose }) => {
+  const [titre, setTitre] = useState("");
+  const [description, setDescription] = useState("");
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (titre.trim() === "") return; 
+    onAddProjet(titre, description);
+    setTitre("");
+    setDescription("");
+    onClose(); 
+  };
+
+  return ( 
+    <form onSubmit={handleSubmit} className=" flex flex-col gap-4">
+      <h2 className="text-xl font-bold text-gray-800">Créaction de projet</h2>
+
+      <input type="text"
+        placeholder="Titre du projet"
+        value={titre}
+        onChange={(e) => setTitre(e.target.value)}
+        className="w-full p-2 border border-gray-300 rounded"
+        required
+      />
+      <textarea
+        placeholder="Description du projet"
+        value={description}
+        onChange={(e) => setDescription(e.target.value)}
+        className="w-full p-2 border border-gray-300 rounded"
+      ></textarea>
+      <div>
+        <button
+          type="submit"
+          className="mr-2 py-2 px-4 bg-blue-500 text-white rounded hover:bg-blue-600"
+        >
+          Annuler
+        </button>
+        <button
+          type="button"
+          className="py-2 px-4 bg-green-300 text-white rounded hover:bg-gray-400"
+          onClick={onClose}
+        >
+          Créer
+        </button>
+       </div>
+    </form>
+  )
+    
+      
+}
+export default Project; 
