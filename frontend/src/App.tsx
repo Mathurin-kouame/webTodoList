@@ -1,11 +1,10 @@
-// import reactLogo from './assets/react.svg'
-// import viteLogo from '/vite.svg'
+
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { lazy, Suspense } from 'react'
 import './App.css'
 import Dashboard from "./pages/Dashboard";
 import  Project  from "./pages/Project";
-import Task  from "./pages/Task";
+import Task from "./pages/Task";
 
 
 const Login = lazy(() => import("./pages/Login"));
@@ -40,7 +39,8 @@ const router = createBrowserRouter([
     path: "/project/:id",
     element: (
       <Suspense>
-        <Project />
+        <Project  onAddProjet={(data) => console.log("Projet ajouté :", data)} 
+          onClose={() => console.log("Fermeture projet")} />
       </Suspense>
     )
   },

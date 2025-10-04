@@ -40,7 +40,7 @@ const Login = () => {
                     <button className="bg-teal-700 p-2 mt-5 rounded-sm text-amber-50">se connecter</button>
                 </form>
                 <div className="flex justify-center mt-[-30px]">
-                    <div className=" hover:text-green-500 duration-150 cursor-pointer">
+                    <div className="hover:text-green-500 duration-150 cursor-pointer ml-45">
                         <Link to="/">Créer un compte ?</Link>
                     </div>
                 </div>

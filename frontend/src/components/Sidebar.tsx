@@ -16,7 +16,7 @@ const Sidebar = ({ projets, onSelectProjet, onAddProjet, onShowProjets }: Sideba
   const [open, setOpen] = useState<boolean>(false);
 
   return (
-     <aside className="w-64 bg-gray-200 p-4 flex flex-col">
+    <aside className="w-64 bg-gray-200 p-4 flex flex-col">
       <h2 className="text-xl font-bold mb-4">Gestion de Projets</h2>
 
       <button
