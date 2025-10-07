@@ -19,7 +19,7 @@ const Register = () => {
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         console.log("Données envoyées :", formData);
-
+ 
         fetch("http://localhost:3000/api/register", {
             method: "POST",
             headers: {
