@@ -61,7 +61,8 @@ export class AuthService {
       throw new NotFoundException({
         error: "Mot de passe ou le nom de l'utilisateur est incorrect",
       });
-    return this.authentificateUser(existingUser.id);
+
+    return this.authentificateUser(existingUser);
   }
   //fonction pour verifier le mot de passe hash
   private async isPasswordValid(
@@ -71,14 +72,19 @@ export class AuthService {
     return bcrypt.compare(password, hashedPassword);
   }
 
-  private async authentificateUser(userId: number) {
-    const payload = { sub: userId };
+  private async authentificateUser(user: User) {
+    const payload = { sub: user.id, email: user.email };
 
     //'singAsync' pour génerer le token
     const token = await this.jwtService.signAsync(payload);
     return {
       access_token: token,
       type: 'Bearer',
+      user: {
+        id: user.id,
+        nom: user.nom,
+        prenom: user.prenoms,
+      },
     };
   }
 }

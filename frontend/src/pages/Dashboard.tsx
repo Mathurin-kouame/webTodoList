@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
 import Sidebar from "../components/Sidebar";
+import { useNavigate } from "react-router-dom";
 
 
 type Task = {
@@ -23,16 +24,9 @@ const Dashboard = () => {
   const [selectedProjet, setSelectedProjet] = useState<Projet | null>(null);
   const [loading, setLoading] = useState(true);
   const [showListe, setShowListe] = useState(false);
-
-
-  const userName = "user1"; // remplacer par le nom réel
-
-  // Déconnexion
-  const handleLogout = () => {
-    localStorage.removeItem("access_token");
-    window.location.href = "/login";
-  };
-
+  
+ const navigate = useNavigate();
+  
   //Récuperation des projets
   useEffect(() => {
     const fetchProjets = async () => {
@@ -54,6 +48,7 @@ const Dashboard = () => {
         setLoading(false);
       }
     };
+
     fetchProjets();
   }, []);
 
@@ -69,13 +64,14 @@ const Dashboard = () => {
     const token = localStorage.getItem("access_token");
     try {
       const res = await fetch('http://localhost:3000/projets', {
-        method: 'post',
+        method: 'POST',
         headers: {
           Authorization: `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ titre, description }),
       });
+
 
       if (!res.ok) throw new Error('Erreur lors de la création du projet');
 
@@ -93,7 +89,7 @@ const Dashboard = () => {
     const token = localStorage.getItem("access_token");
     try {
       const res = await fetch(`http://localhost:3000/projets/${selectedProjet.id}/tasks`, {
-        method: 'post',
+        method: 'POST',
         headers: {
           Authorization: `Bearer ${token}`,
           'Content-Type': 'application/json',
@@ -114,7 +110,7 @@ const Dashboard = () => {
   }
 
   //Modification statut d'une tâche
-  const handleUpdateTastStus = async (taskId: number, statut: Task['statut']) => {
+  const handleUpdateTaskStatus = async (taskId: number, statut: Task['statut']) => {
     if (!selectedProjet) return;
     const token = localStorage.getItem('access_token');
 
@@ -141,12 +137,21 @@ const Dashboard = () => {
     }
   };
 
-  // Affichage pendant le chargement
+  const handleLogout = () => {
+    const confirmLogout = window.confirm("voulez-vous vraiment vous déconnecter ?");
+    if (confirmLogout) {
+      localStorage.removeItem("access_token");
+      localStorage.removeItem("user");
+      navigate("/")
+    }
+  }
+
+   // Affichage pendant le chargement
   if (loading) return <p className="text-center mt-10">Chargement...</p>;
 
   return (
     <div className="flex flex-col h-screen">
-      <Navbar userName={userName} onLogout={handleLogout} />
+      <Navbar onLogout={handleLogout} />
 
       <div className="flex flex-1">
         <Sidebar
@@ -231,7 +236,7 @@ const Dashboard = () => {
                     <select
                       value={task.statut}
                       onChange={(e) =>
-                        handleUpdateTastStus(task.id, e.target.value as Task['statut'])}
+                        handleUpdateTaskStatus(task.id, e.target.value as Task['statut'])}
                       className="ml-4 border border-gray-300 rounded p-1"
                     >
                       <option value="A faire">A faire</option>

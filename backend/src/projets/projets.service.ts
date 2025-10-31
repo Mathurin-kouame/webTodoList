@@ -26,7 +26,14 @@ export class ProjetsService {
       ...createProjetDto,
       user,
     });
-    return this.projetRepository.save(projet);
+
+    const savedProjet = await this.projetRepository.save(projet);
+
+    const userDto = plainToInstance(UserResponseDto, user, {
+      excludeExtraneousValues: true,
+    });
+
+    return { ...savedProjet, user: userDto };
   }
 
   async findAllByUser(userId: number): Promise<ProjetReponseDto[]> {
@@ -35,25 +42,6 @@ export class ProjetsService {
       relations: ['user'],
     });
 
-    //Suprimer password avant l'envoie
-    // return projets.map((projet) => {
-    //   const userDto: UserResponseDto = {
-    //     id: projet.user.id,
-    //     nom: projet.user.nom,
-    //     prenoms: projet.user.prenoms,
-    //     email: projet.user.email,
-    //   };
-
-    //   const projetDto: ProjetReponseDto = {
-    //     id: projet.id,
-    //     titre: projet.titre,
-    //     description: projet.description,
-    //     user: userDto,
-    //     tasks: projet.tasks,
-    //   };
-
-    //   return projetDto;
-    // });
     return projets.map((projet) => ({
       ...projet,
       user: plainToInstance(UserResponseDto, projet.user, {

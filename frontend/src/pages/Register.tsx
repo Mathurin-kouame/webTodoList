@@ -1,3 +1,4 @@
+import { EyeIcon, EyeOff } from "lucide-react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 
@@ -9,6 +10,7 @@ const Register = () => {
         email: "",
         password: ""
     });
+const [showPassword, setShowPassword] = useState(false)
 
     // Gérer la saisie des inputs
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -20,7 +22,7 @@ const Register = () => {
         event.preventDefault();
         console.log("Données envoyées :", formData);
  
-        fetch("http://localhost:3000/api/register", {
+        fetch("http://localhost:3000/auth/register", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -36,7 +38,7 @@ const Register = () => {
             .then((data) => {
                 console.log("Succès :", data);
                 // Redirection après inscription réussie
-                window.location.href = "/login";
+                window.location.href = "/";
             })
             .catch((error) => {
                 console.error("Erreur lors de l’inscription :", error);
@@ -101,20 +103,32 @@ const Register = () => {
                         <label htmlFor="last-name" className="block text-sm/6 font-medium text-gray-900">
                             Password
                         </label>
-                        <div className="mt-2">
+                        <div className="mt-2 relative">
                             <input
                                 id="password"
                                 name="password"
-                                type="password"
+                                 type={showPassword? 'text' : 'password'}
                                 value={formData.password}
                                 onChange={handleChange}
                                 autoComplete="password"
                                 className="block w-120 rounded-md  px-3 py-1.5  text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-green-700 sm:text-sm/6 dark:bg-white/5  dark:placeholder:text-gray-500 dark:focus:outline-green-700"
                             />
+                             <span
+                                    onClick={() => setShowPassword(!showPassword)}
+                                    className="absolute z-30 -translate-y-1/2 cursor-pointer right-1/3 p-2 top-1/2"
+                                >
+                                    {showPassword ? (
+                                        <EyeIcon className=" fill-gray-500 dark:fill-gray-400 size-3" />
+                                        
+                                    ) : (
+                                        <EyeOff  className="fill-gray-500 dark:fill-gray-400 size-3"/>
+                                    )}
+
+                             </span>
                         </div>
                     </div>
                 </div>
-                <button type="submit" className="bg-teal-700 p-2 mt-5 rounded-sm text-amber-50">
+                <button className="bg-teal-700 p-2 mt-5 rounded-sm text-amber-50 cursor-pointer hover:bg-teal-600">
                     S'inscrire
                 </button>
             </form>

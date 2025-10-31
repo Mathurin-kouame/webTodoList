@@ -5,10 +5,8 @@ import { JwtPayload } from './types/jwt-payload.type';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
-  email: any;
-  userId: any;
   constructor() {
-    const secret: string = process.env.JWT_SECRET ?? '';
+    const secret = process.env.JWT_SECRET;
     if (!secret) {
       throw new Error('token non reconnu');
     }
@@ -20,6 +18,6 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     });
   }
   validate(payload: JwtPayload) {
-    return { id: payload.userId, email: payload.email };
+    return { id: payload.sub, email: payload.email };
   }
 }

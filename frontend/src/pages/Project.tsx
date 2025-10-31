@@ -39,14 +39,15 @@ const Project: React.FC<ProjectProps> = ({ onAddProjet, onClose }) => {
       <div>
         <button
           type="submit"
+           onClick={onClose}
           className="mr-2 py-2 px-4 bg-blue-500 text-white rounded hover:bg-blue-600"
         >
           Annuler
         </button>
         <button
-          type="button"
+          type="submit"
           className="py-2 px-4 bg-green-300 text-white rounded hover:bg-gray-400"
-          onClick={onClose}
+         
         >
           Créer
         </button>
